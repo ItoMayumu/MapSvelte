@@ -41,7 +41,7 @@
         applyStyleToSelected(feature.placeId);
         // Add the info window.
         const place = await feature.fetchPlace();
-        let content = '<span style="font-size:small">Display name: ' + place.displayName +
+        let content = '<span style="color: black; font-size:small">Display name: ' + place.displayName +
             '<br/> Place ID: ' + feature.placeId +
             '<br/> Feature type: ' + feature.featureType +
             '</span>';
@@ -51,17 +51,19 @@
     // Stroke and fill with minimum opacity value.
     //@ts-ignore
     const styleDefault: google.maps.FeatureStyleOptions = {
-        strokeColor: '#810FCB',
-        strokeOpacity: 1.0,
-        strokeWeight: 2.0,
+        // strokeColor: '#810FCB',
+        // strokeOpacity: 1.0,
+        // strokeWeight: 2.0,
         fillColor: 'white',
-        fillOpacity: 0.1 // Polygons must be visible to receive click events.
+        fillOpacity: 0.002 // Polygons must be visible to receive click events.
     };
 
     // Style for the clicked Administrative Area Level 2 polygon.
     //@ts-ignore
     const styleClicked: google.maps.FeatureStyleOptions = {
-        ...styleDefault,
+        strokeColor: '#810FCB',
+        strokeOpacity: 1.0,
+        strokeWeight: 2.0,
         fillColor: '#810FCB',
         fillOpacity: 0.5
     };
