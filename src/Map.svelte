@@ -103,3 +103,91 @@
 </style>
 
 <div class="full-screen" bind:this={container}></div>
+
+ <!-- <script lang="ts">
+    import { onMount } from 'svelte';
+    import { Loader } from '@googlemaps/js-api-loader';
+
+    let container: HTMLElement;
+    let map: google.maps.Map;
+    let markers: google.maps.Marker[] = [];
+    let polygon: google.maps.Polygon;
+
+    const mapId = '48d8979b650d798d'; // <YOUR_MAP_ID_HERE>
+
+    onMount(async () => {
+        const loader = new Loader({
+            apiKey: "AIzaSyAxFyaxgO1edLSwqpUq1c0mBI8Zn4iHqcM",
+            version: 'weekly'
+        });
+
+        const { Map, Marker, Polygon } = await loader.importLibrary('maps');
+
+        map = new Map(container, {
+            center: { lat: 39.23, lng: -105.73 }, // Park County, CO
+            zoom: 8,
+            mapId: mapId
+        });
+
+        // 初期の図形を設定
+        polygon = new Polygon({
+            map: map,
+            paths: [],
+            strokeColor: '#810FCB',
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+            fillColor: '#810FCB',
+            fillOpacity: 0.35,
+        });
+
+        // マップにクリックリスナーを追加してマーカーを設置
+        map.addListener('click', (event) => {
+            if (markers.length < 3) {
+                addMarker(event.latLng);
+            }
+        });
+    });
+
+    // クリックした位置にマーカーを追加するヘルパー関数
+    function addMarker(location: google.maps.LatLng) {
+        const marker = new google.maps.Marker({
+            position: location,
+            map: map,
+        });
+
+        markers.push(marker);
+        updatePolygon();
+    }
+
+    // 図形を更新するヘルパー関数
+    function updatePolygon() {
+        const path = markers.map(marker => marker.getPosition());
+        polygon.setPath(path);
+    }
+
+    // マーカーをリセットするヘルパー関数
+    function resetMarkers() {
+        markers.forEach(marker => marker.setMap(null));
+        markers = [];
+        polygon.setPath([]);
+    }
+</script>
+
+<style>
+.full-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+button {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 5;
+}
+</style>
+
+<div class="full-screen" bind:this={container}></div>
+<button on:click={resetMarkers}>リセット</button> -->
