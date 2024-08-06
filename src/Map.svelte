@@ -61,32 +61,41 @@
       "polygoncomplete",
       function (polygon: google.maps.Polygon) {
         let maxXList = -Infinity;
-        let maxYList = -Infinity;
-        let minXList = Infinity;
-        let minYList = Infinity;
         let polygonPath = polygon.getPath();
+
+        let xSum = 0;
+        let ySum = 0;
 
         polygonPath.forEach((value, ii) => {
           const currentLat = polygonPath.getAt(ii).lat();
           const currentLng = polygonPath.getAt(ii).lng();
-          if (maxXList < currentLat) {
-            maxXList = currentLat;
-          }
-          if (minXList > currentLat) {
-            minXList = currentLat;
-          }
-          if (maxYList < currentLng) {
-            maxYList = currentLng;
-          }
-          if (minYList > currentLng) {
-            minYList = currentLng;
-          }
+          maxXList = maxXList < currentLat ? currentLat : maxXList;
+          xSum += currentLat;
+          ySum += currentLng;
         });
         const centerPosition = {
-          lat: (maxXList + minXList) / 2,
-          lng: (maxYList + minYList) / 2,
+          lat: xSum / polygonPath.getLength(),
+          lng: ySum / polygonPath.getLength(),
         };
-        const radius = Math.abs(maxXList - centerPosition.lat) * 11000 * 10;
+
+        let maxLength = 0;
+        polygonPath.forEach((_, ii) => {
+          const currentLat = polygonPath.getAt(ii).lat();
+          const currentLng = polygonPath.getAt(ii).lng();
+
+          const xAxisLen = Math.abs(currentLat - centerPosition.lat);
+          const yAxisLen = Math.abs(currentLng - centerPosition.lng);
+
+          const currantLength = Math.sqrt(
+            Math.pow(xAxisLen, 2) + Math.pow(yAxisLen, 2)
+          );
+
+          if (maxLength < currantLength) {
+            maxLength = currantLength;
+          }
+        });
+
+        const radius = maxLength * 110 * 1000;
         // console.log(radius)
         // ポリゴンが完成したらnearbySearch関数を呼び出す
         nearbySearch(centerPosition, radius);
