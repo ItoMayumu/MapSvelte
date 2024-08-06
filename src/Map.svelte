@@ -1,19 +1,18 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { Loader } from "@googlemaps/js-api-loader";
-  import { writable, get } from "svelte/store";
+  import { onMount } from "svelte";
 
   let container: HTMLElement;
   let map: google.maps.Map;
   let featureLayer: google.maps.FeatureLayer;
   let infoWindow: google.maps.InfoWindow;
-  let markers: google.maps.Marker;
-  let centerPosition: { lat: number; lng: number } | undefined;
   const mapId = "48d8979b650d798d"; // GCPのmapId
   let placeIdList: string[] = [];
-  let radius=0;
 
-
+  type Position = {
+    lat: number;
+    lng: number;
+  };
 
   onMount(async () => {
     const loader = new Loader({
@@ -31,8 +30,7 @@
       mapId: mapId,
     });
 
-    //@ts-ignore
-    featureLayer = map.getFeatureLayer("POSTAL_CODE");
+    featureLayer = map.getFeatureLayer(google.maps.FeatureType.POSTAL_CODE);
 
     infoWindow = new google.maps.InfoWindow({});
 
@@ -61,7 +59,7 @@
     google.maps.event.addListener(
       drawingManager,
       "polygoncomplete",
-      function (polygon) {
+      function (polygon: google.maps.Polygon) {
         let maxXList = -Infinity;
         let maxYList = -Infinity;
         let minXList = Infinity;
@@ -84,22 +82,19 @@
             minYList = currentLng;
           }
         });
-        centerPosition = {
+        const centerPosition = {
           lat: (maxXList + minXList) / 2,
           lng: (maxYList + minYList) / 2,
         };
-        if (!centerPosition) {
-          return;
-        }
-        radius = Math.abs(maxXList - centerPosition.lat)*11000*1000 ;
-        console.log(radius)
+        const radius = Math.abs(maxXList - centerPosition.lat) * 11000 * 10;
+        // console.log(radius)
         // ポリゴンが完成したらnearbySearch関数を呼び出す
-        nearbySearch();
+        nearbySearch(centerPosition, radius);
       }
     );
   });
 
-  async function nearbySearch() {
+  async function nearbySearch(centerPosition: Position, radius: number) {
     //@ts-ignore
     const { Place, SearchNearbyRankPreference } =
       (await google.maps.importLibrary("places")) as google.maps.PlacesLibrary;
@@ -142,7 +137,7 @@
         bounds.extend(place.location as google.maps.LatLng);
         placeIdList.push(place.id);
       });
-      console.log(placeIdList);
+      // console.log(placeIdList);
 
       map.fitBounds(bounds);
     } else {
@@ -157,7 +152,6 @@
     fillOpacity: 0.1,
   };
 
-  //@ts-ignore
   const styleClicked: google.maps.FeatureStyleOptions = {
     ...styleDefault,
     fillColor: "#810FCB",
@@ -168,7 +162,10 @@
     featureLayer.style = (options) => {
       if (
         placeIdList &&
-        placeIdList.some((placeid) => options.feature.placeId == placeid)
+        placeIdList.some(
+          (placeId) =>
+            (options.feature as google.maps.PlaceFeature).placeId == placeId
+        )
       ) {
         return styleClicked;
       }
