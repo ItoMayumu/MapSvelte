@@ -4,8 +4,10 @@
 </script>
 
 <svelte:head>
-  <script defer async
-    src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAxFyaxgO1edLSwqpUq1c0mBI8Zn4iHqcM&callback=initMap'></script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxFyaxgO1edLSwqpUq1c0mBI8Zn4iHqcM&libraries=drawing&callback=initMap&v=weekly"
+    defer
+  ></script>
 </svelte:head>
 
 <main>
