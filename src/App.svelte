@@ -5,7 +5,7 @@
 
 <svelte:head>
     <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxFyaxgO1edLSwqpUq1c0mBI8Zn4iHqcM&libraries=drawing&callback=initMap&v=weekly"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW1GMn5PowT_qtP5S63mbnioyABdd_y-I&libraries=drawing&callback=initMap&v=weekly"
     defer
   ></script>
 </svelte:head>

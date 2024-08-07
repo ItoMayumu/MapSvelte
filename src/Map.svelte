@@ -16,7 +16,7 @@
 
   onMount(async () => {
     const loader = new Loader({
-      apiKey: "AIzaSyAxFyaxgO1edLSwqpUq1c0mBI8Zn4iHqcM",
+      apiKey: "AIzaSyBW1GMn5PowT_qtP5S63mbnioyABdd_y-I",
       version: "weekly",
     });
 
