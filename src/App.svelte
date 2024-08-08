@@ -1,18 +1,19 @@
 <script lang="ts">
   import Map from './Map.svelte';
+  import Map2 from './Map2.svelte';
   export let ready;
 </script>
 
 <svelte:head>
     <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBW1GMn5PowT_qtP5S63mbnioyABdd_y-I&libraries=drawing&callback=initMap&v=weekly"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxFyaxgO1edLSwqpUq1c0mBI8Zn4iHqcM&libraries=drawing&callback=initMap&v=weekly"
     defer
   ></script>
 </svelte:head>
 
 <main>
   {#if ready}
-    <Map />
+    <Map2 />
   {/if}
 </main>
 
