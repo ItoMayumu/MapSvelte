@@ -9,8 +9,8 @@
     const map = new google.maps.Map(
       document.getElementById("map") as HTMLElement,
       {
-        zoom: 7,
-        center: { lat: 41.85, lng: -87.65 },
+        zoom: 9,
+        center: { lat: 34.85, lng: 135.65 },
       }
     );
 
@@ -66,6 +66,14 @@ function calculateAndDisplayRoute(
     <div id="floating-panel">
         <b>Start: </b>
         <select id="start">
+          <option value="tokyo, japan">Tokyo</option>
+          <option value="hirakata, japan">Hirakata</option>
+          <option value="osaka, japan">Osaka</option>
+          <option value="kusatsu, shiga japan">Kusatsu</option>
+          <option value="kyoto, japan">Kyoto</option>
+          <option value="nagoya, japan">Nagoya</option>
+          <option value="fukuoka, japan">Fukuoka</option>
+          <option value="sapporo, japan">Sapporo</option>
           <option value="chicago, il">Chicago</option>
           <option value="st louis, mo">St Louis</option>
           <option value="joplin, mo">Joplin, MO</option>
@@ -81,6 +89,14 @@ function calculateAndDisplayRoute(
         </select>
         <b>End: </b>
         <select id="end">
+          <option value="tokyo, japan">Tokyo</option>
+          <option value="hirakata, japan">Hirakata</option>
+          <option value="osaka, japan">Osaka</option>
+          <option value="kusatsu, shiga japan">Kusatsu</option>
+          <option value="kyoto, japan">Kyoto</option>
+          <option value="nagoya, japan">Nagoya</option>
+          <option value="fukuoka, japan">Fukuoka</option>
+          <option value="sapporo, japan">Sapporo</option>
           <option value="chicago, il">Chicago</option>
           <option value="st louis, mo">St Louis</option>
           <option value="joplin, mo">Joplin, MO</option>
