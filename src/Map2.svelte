@@ -9,49 +9,109 @@
     const map = new google.maps.Map(
       document.getElementById("map") as HTMLElement,
       {
-        zoom: 9,
-        center: { lat: 34.85, lng: 135.65 },
+        zoom: 7,
+        center: { lat: 41.85, lng: -87.65 },
       }
     );
 
     const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+    draggable: true,
+    map,
+    panel: document.getElementById("panel") as HTMLElement,
+  });
 
-    const onChangeHandler = function () {
-    calculateAndDisplayRoute(directionsService, directionsRenderer);
-  };
+     directionsRenderer.addListener("directions_changed", () => {
+    const directions = directionsRenderer.getDirections();
 
-  (document.getElementById("start") as HTMLElement).addEventListener(
-    "change",
-    onChangeHandler
-  );
-  (document.getElementById("end") as HTMLElement).addEventListener(
-    "change",
-    onChangeHandler
+    if (directions) {
+      computeTotalDistance(directions);
+    }
+  });
+
+  displayRoute(
+   "Tokyo, Japan",
+    "Osaka, Japan",
+    directionsService,
+    directionsRenderer
   );
 }
-    
-function calculateAndDisplayRoute(
-  directionsService: google.maps.DirectionsService,
-  directionsRenderer: google.maps.DirectionsRenderer
+
+function displayRoute(
+  origin: string,
+  destination: string,
+  service: google.maps.DirectionsService,
+  display: google.maps.DirectionsRenderer
 ) {
-  directionsService
+  service
     .route({
-      origin: {
-        query: (document.getElementById("start") as HTMLInputElement).value,
-      },
-      destination: {
-        query: (document.getElementById("end") as HTMLInputElement).value,
-      },
+      origin: origin,
+      destination: destination,
+      // waypoints: [
+      //   { location: "Adelaide, SA" },
+      //   { location: "Broken Hill, NSW" },
+      // ],
       travelMode: google.maps.TravelMode.DRIVING,
+      avoidTolls: true,
     })
-    .then((response) => {
-      directionsRenderer.setDirections(response);
-      console.log(response);
+    .then((result: google.maps.DirectionsResult) => {
+      display.setDirections(result);
     })
-    .catch((e) => window.alert("Directions request failed due to " + status));
+    .catch((e) => {
+      alert("Could not display directions due to: " + e);
+    });
 }
+
+function computeTotalDistance(result: google.maps.DirectionsResult) {
+  let total = 0;
+  const myroute = result.routes[0];
+
+  if (!myroute) {
+    return;
+  }
+
+  for (let i = 0; i < myroute.legs.length; i++) {
+    total += myroute.legs[i]!.distance!.value;
+  }
+
+  total = total / 1000;
+  (document.getElementById("total") as HTMLElement).innerHTML = total + " km";
+}
+
+//     const onChangeHandler = function () {
+//     calculateAndDisplayRoute(directionsService, directionsRenderer);
+//   };
+
+//   (document.getElementById("start") as HTMLElement).addEventListener(
+//     "change",
+//     onChangeHandler
+//   );
+//   (document.getElementById("end") as HTMLElement).addEventListener(
+//     "change",
+//     onChangeHandler
+//   );
+// }
+    
+// function calculateAndDisplayRoute(
+//   directionsService: google.maps.DirectionsService,
+//   directionsRenderer: google.maps.DirectionsRenderer
+// ) {
+//   directionsService
+//     .route({
+//       origin: {
+//         query: (document.getElementById("start") as HTMLInputElement).value,
+//       },
+//       destination: {
+//         query: (document.getElementById("end") as HTMLInputElement).value,
+//       },
+//       travelMode: google.maps.TravelMode.DRIVING,
+//     })
+//     .then((response) => {
+//       directionsRenderer.setDirections(response);
+//       console.log(response);
+//     })
+//     .catch((e) => window.alert("Directions request failed due to " + status));
+// }
 
   onMount(async () => {
     try {
@@ -62,57 +122,41 @@ function calculateAndDisplayRoute(
   });
 </script>
 
-<div>
-    <div id="floating-panel">
-        <b>Start: </b>
-        <select id="start">
-          <option value="tokyo, japan">Tokyo</option>
-          <option value="hirakata, japan">Hirakata</option>
-          <option value="osaka, japan">Osaka</option>
-          <option value="kusatsu, shiga japan">Kusatsu</option>
-          <option value="kyoto, japan">Kyoto</option>
-          <option value="nagoya, japan">Nagoya</option>
-          <option value="fukuoka, japan">Fukuoka</option>
-          <option value="sapporo, japan">Sapporo</option>
-          <option value="chicago, il">Chicago</option>
-          <option value="st louis, mo">St Louis</option>
-          <option value="joplin, mo">Joplin, MO</option>
-          <option value="oklahoma city, ok">Oklahoma City</option>
-          <option value="amarillo, tx">Amarillo</option>
-          <option value="gallup, nm">Gallup, NM</option>
-          <option value="flagstaff, az">Flagstaff, AZ</option>
-          <option value="winona, az">Winona</option>
-          <option value="kingman, az">Kingman</option>
-          <option value="barstow, ca">Barstow</option>
-          <option value="san bernardino, ca">San Bernardino</option>
-          <option value="los angeles, ca">Los Angeles</option>
-        </select>
-        <b>End: </b>
-        <select id="end">
-          <option value="tokyo, japan">Tokyo</option>
-          <option value="hirakata, japan">Hirakata</option>
-          <option value="osaka, japan">Osaka</option>
-          <option value="kusatsu, shiga japan">Kusatsu</option>
-          <option value="kyoto, japan">Kyoto</option>
-          <option value="nagoya, japan">Nagoya</option>
-          <option value="fukuoka, japan">Fukuoka</option>
-          <option value="sapporo, japan">Sapporo</option>
-          <option value="chicago, il">Chicago</option>
-          <option value="st louis, mo">St Louis</option>
-          <option value="joplin, mo">Joplin, MO</option>
-          <option value="oklahoma city, ok">Oklahoma City</option>
-          <option value="amarillo, tx">Amarillo</option>
-          <option value="gallup, nm">Gallup, NM</option>
-          <option value="flagstaff, az">Flagstaff, AZ</option>
-          <option value="winona, az">Winona</option>
-          <option value="kingman, az">Kingman</option>
-          <option value="barstow, ca">Barstow</option>
-          <option value="san bernardino, ca">San Bernardino</option>
-          <option value="los angeles, ca">Los Angeles</option>
-        </select>
-      </div>
+<!-- // <div>
+//     <div id="floating-panel">
+//         <b>Start: </b>
+//         <select id="start">
+//           <option value="chicago, il">Chicago</option>
+//           <option value="st louis, mo">St Louis</option>
+//           <option value="joplin, mo">Joplin, MO</option>
+//           <option value="oklahoma city, ok">Oklahoma City</option>
+//           <option value="amarillo, tx">Amarillo</option>
+//           <option value="gallup, nm">Gallup, NM</option>
+//           <option value="flagstaff, az">Flagstaff, AZ</option>
+//           <option value="winona, az">Winona</option>
+//           <option value="kingman, az">Kingman</option>
+//           <option value="barstow, ca">Barstow</option>
+//           <option value="san bernardino, ca">San Bernardino</option>
+//           <option value="los angeles, ca">Los Angeles</option>
+//         </select>
+//         <b>End: </b>
+//         <select id="end">
+//           <option value="chicago, il">Chicago</option>
+//           <option value="st louis, mo">St Louis</option>
+//           <option value="joplin, mo">Joplin, MO</option>
+//           <option value="oklahoma city, ok">Oklahoma City</option>
+//           <option value="amarillo, tx">Amarillo</option>
+//           <option value="gallup, nm">Gallup, NM</option>
+//           <option value="flagstaff, az">Flagstaff, AZ</option>
+//           <option value="winona, az">Winona</option>
+//           <option value="kingman, az">Kingman</option>
+//           <option value="barstow, ca">Barstow</option>
+//           <option value="san bernardino, ca">San Bernardino</option>
+//           <option value="los angeles, ca">Los Angeles</option>
+//         </select>
+//       </div> -->
   <div id="map" class="full-screen" bind:this={container}></div>
-</div>
+<!-- </div> -->
 
 <style>
   .full-screen {
