@@ -9,7 +9,7 @@
   let infoWindow: google.maps.InfoWindow;
   let markers: google.maps.Marker;
   let centerPosition: { lat: number; lng: number } | undefined;
-  const mapId = "48d8979b650d798d"; // GCPのmapId
+  const mapId = "------------------"; 
   let placeIdList: string[] = [];
   let radius=0;
 
