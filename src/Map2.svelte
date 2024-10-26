@@ -3,7 +3,7 @@
 
   let container: HTMLElement;
   let map: google.maps.Map;
-  const mapId = "48d8979b650d798d"; // GCPのmapId
+  const mapId = "---------------"; 
 
   async function initMap() {
     const map = new google.maps.Map(
